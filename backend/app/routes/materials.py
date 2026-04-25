@@ -1,3 +1,4 @@
+import traceback
 from fastapi import APIRouter, Depends, HTTPException
 from app.dependencies import verify_token
 from app.schemas.material import CreateMaterialRequest, CreateMaterialResponse
@@ -16,6 +17,8 @@ async def create_material_endpoint(
     try:
         return await create_material(body, user_id=current_user["user_id"])
     except Exception as e:
+        error_detail = f"{str(e)}\n{traceback.format_exc()}"
+        print(f"ERROR /materials/create: {error_detail}")
         raise HTTPException(status_code=500, detail=f"Error al generar material: {str(e)}")
 
 
